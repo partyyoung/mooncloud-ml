@@ -1,0 +1,33 @@
+# 请将此处改为真实的 app key，从 MBP Web 界面上可以看到
+app_key: 12345
+# 请将此处改为真实的程序名称，该名称会显示在 MBP 的程序列表中
+prog_name: tianchi
+# 输入数据表名及分区列表，指定分区时可以使用特殊宏 ${date_ymd} 表示调度运行时日期，
+# 允许使用语法 ${date_ymd-n} 或 ${date_ymd+n} 表示调度运行时刻之前 n 天或之后 n 天的日期
+table_parent: "file:///home/yangjd/Documents/workspace/mooncloud/warehouse/"
+table_in:
+  mr_dw.tianchi_mobile_recommend_train_user:
+  - dt=${date_ymd}
+# 输出数据表及分区，允许使用上述特殊宏及相关表达式
+# 注意：输出数据表必须预先在 MBP Web 界面上创建好
+table_out:
+  pri_result.tianchi_mobile_recommendation_predict: dt=${date_ymd}
+# M/R 程序功能类
+mr_classes:
+  mapper: mobile.recommend.MrMapper
+  mapper_output_key: org.apache.hadoop.io.Text
+  mapper_output_value: org.apache.hadoop.io.LongWritable
+  reducer: mobile.recommend.MrReducer
+  combiner: mobile.recommend.MrCombiner
+  #partitioner: 含包名的完整类名
+  #key_comparator: 含包名的完整类名
+  #value_grouping_comparator: 含包名的完整类名
+# 建议使用的 Mapper 实例数量(1~480)，只是作为给系统的提示，并不一定按设置值分配实例
+# 未设置本选项时默认由系统自动决定最优值
+#map_tasks: 100
+# 建议使用的 Reducer 实例数量(1~480)，只是作为给系统的提示，并不一定按设置值分配实例
+# 未设置本选项时默认为 Mapper 实例数量的 1/4
+reduce_tasks: 1
+# 任务试跑时结果表预览输出行数(0~100)，设置为 0 表示不预览输出表内容，未设置本选项时默认为 100
+#output_lines: 100
+
