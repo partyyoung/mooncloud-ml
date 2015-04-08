@@ -1,0 +1,1 @@
+pri_result.weather_targetprobability,target:string,pv:bigint,probability:double,dt:string:

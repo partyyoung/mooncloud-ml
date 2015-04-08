@@ -1,0 +1,1 @@
+pri_result.weather_classify,outlook:string,temperature:string,humidity:string,windy:string,play:string,dt:string:
