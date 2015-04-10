@@ -92,20 +92,20 @@ public class MrReducer extends TableReducer<Tuple, Record> {
 		long diff = 0, lasttime = 0;
 		if (tradeTime != null && firstVisitTime != null) {// 从关注商品到购买商品的时间跨度
 			try {
-				diff = SomeStaticUtils.DATEFORMAT2.parse(tradeTime).getTime()
+				diff = (SomeStaticUtils.DATEFORMAT2.parse(tradeTime).getTime()
 						- SomeStaticUtils.DATEFORMAT2.parse(firstVisitTime)
-								.getTime() / 1000;
+								.getTime()) / 1000;
 			} catch (ParseException e) {
-				e.printStackTrace();
+//				e.printStackTrace();
 			}
 		}
 		diff = diff < 0 ? 0 : diff;
 
 		try {
-			lasttime = (SomeStaticUtils.DATEFORMAT3.parse(date_ymd).getTime() - SomeStaticUtils.DATEFORMAT2
+			lasttime = (SomeStaticUtils.DATEFORMAT4.parse(date_ymd).getTime() - SomeStaticUtils.DATEFORMAT2
 					.parse(lastVisitTime).getTime()) / 1000;
 		} catch (ParseException e) {
-			e.printStackTrace();
+//			e.printStackTrace();
 		}
 
 		StringBuilder sb = new StringBuilder();
