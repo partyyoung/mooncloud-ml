@@ -4,21 +4,21 @@ app_key: 12345
 prog_name: tianchi
 # 输入数据表名及分区列表，指定分区时可以使用特殊宏 ${date_ymd} 表示调度运行时日期，
 # 允许使用语法 ${date_ymd-n} 或 ${date_ymd+n} 表示调度运行时刻之前 n 天或之后 n 天的日期
-table_parent: "file:///home/yangjd/Documents/workspace/mooncloud/warehouse/"
+table_parent: "file:///home/yangjd/git/mooncloud-ml/warehouse/"
 table_in:
   mr_dw.tianchi_mobile_recommend_train_user:
   - dt=${date_ymd}
 # 输出数据表及分区，允许使用上述特殊宏及相关表达式
 # 注意：输出数据表必须预先在 MBP Web 界面上创建好
 table_out:
-  pri_result.tianchi_mobile_recommendation_predict: dt=${date_ymd}
+  pri_result.mr_result: dt=${date_ymd}
 # M/R 程序功能类
 mr_classes:
   mapper: mobile.recommend.MrMapper
-  mapper_output_key: org.apache.hadoop.io.Text
-  mapper_output_value: org.apache.hadoop.io.LongWritable
+  mapper_output_key: net.mooncloud.io.Tuple
+  mapper_output_value: net.mooncloud.Record
   reducer: mobile.recommend.MrReducer
-  combiner: mobile.recommend.MrCombiner
+  #combiner: mobile.recommend.MrCombiner
   #partitioner: 含包名的完整类名
   #key_comparator: 含包名的完整类名
   #value_grouping_comparator: 含包名的完整类名
