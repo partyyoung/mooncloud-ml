@@ -39,28 +39,28 @@ public class MrReducer extends TableReducer<Tuple, Record>
 		date_ymd = context.getConfiguration().get("date_ymd");
 		try
 		{
-			time_ymd = SomeStaticUtils.DATEFORMAT3.parse(date_ymd).getTime();
-			date_ymd = SomeStaticUtils.DATEFORMAT4.format(time_ymd);
+			time_ymd = SomeStaticUtils.DATEFORMAT3.parse(date_ymd).getTime() / 1000;
+			date_ymd = SomeStaticUtils.DATEFORMAT4.format(time_ymd * 1000);
 
 			info1 = new UserItemInfo();
-			info1.time_ymd = time_ymd - 24 * 60 * 60 * 1000;
-			info1.date_ymd = SomeStaticUtils.DATEFORMAT4.format(info1.time_ymd);
+			info1.time_ymd = time_ymd - 24 * 60 * 60;
+			info1.date_ymd = SomeStaticUtils.DATEFORMAT4.format(info1.time_ymd * 1000);
 
 			info3 = new UserItemInfo();
-			info3.time_ymd = time_ymd - 3 * 24 * 60 * 60 * 1000;
-			info3.date_ymd = SomeStaticUtils.DATEFORMAT4.format(info3.time_ymd);
+			info3.time_ymd = time_ymd - 3 * 24 * 60 * 60;
+			info3.date_ymd = SomeStaticUtils.DATEFORMAT4.format(info3.time_ymd * 1000);
 
 			info7 = new UserItemInfo();
-			info7.time_ymd = time_ymd - 7 * 24 * 60 * 60 * 1000;
-			info7.date_ymd = SomeStaticUtils.DATEFORMAT4.format(info7.time_ymd);
+			info7.time_ymd = time_ymd - 7 * 24 * 60 * 60;
+			info7.date_ymd = SomeStaticUtils.DATEFORMAT4.format(info7.time_ymd * 1000);
 
 			info15 = new UserItemInfo();
-			info15.time_ymd = time_ymd - 15 * 24 * 60 * 60 * 1000;
-			info15.date_ymd = SomeStaticUtils.DATEFORMAT4.format(info15.time_ymd);
+			info15.time_ymd = time_ymd - 15 * 24 * 60 * 60;
+			info15.date_ymd = SomeStaticUtils.DATEFORMAT4.format(info15.time_ymd * 1000);
 
 			info30 = new UserItemInfo();
-			info30.time_ymd = time_ymd - 30 * 24 * 60 * 60 * 1000;
-			info30.date_ymd = SomeStaticUtils.DATEFORMAT4.format(info30.time_ymd);
+			info30.time_ymd = time_ymd - 30 * 24 * 60 * 60;
+			info30.date_ymd = SomeStaticUtils.DATEFORMAT4.format(info30.time_ymd * 1000);
 		}
 		catch (ParseException e)
 		{
@@ -69,8 +69,73 @@ public class MrReducer extends TableReducer<Tuple, Record>
 		}
 	}
 
-	@Override
-	public void reduce(Tuple key, Iterable<Record> values, Context context) throws IOException, InterruptedException
+	private void userItemDailyPV(Tuple key, Iterable<Record> values, Context context) throws IOException, InterruptedException
+	{
+		String[] user_item = key.get(0).toString().split("\001");
+		String user = user_item[0];
+		String item = user_item[1];
+
+		long userItemPV = 0; // pv
+		String lastVisitTime = "", firstVisitTime = null, tradeTime = null; // 最后一次访问时间
+		int collect = 0, cart = 0, buy = 0, target = 0; // 收藏,购物车,购买
+		HashMap<String, Long> userItemHourPV = new HashMap<String, Long>();
+		HashMap<Long, Long> userItemDailyPV = new HashMap<Long, Long>();
+
+		for (Record value : values)
+		{
+			try
+			{
+				String date = value.get("time").toString();
+				long time = SomeStaticUtils.DATEFORMAT2.parse(date).getTime() / 1000;
+				if (date.startsWith(date_ymd))
+				{// target
+					if (target == 0 && "4".equals(value.get("behavior_type").toString()))
+					{
+						target = 1;
+					}
+				}
+				else
+				{
+					if ("1".equals(value.get("behavior_type").toString()))
+					{
+						long pv = 1, daytime = SomeStaticUtils.DATEFORMAT4.parse(date.split(" ")[0]).getTime() / 1000;
+						if (userItemDailyPV.containsKey(daytime))
+						{
+							pv += userItemDailyPV.get(daytime);
+						}
+						userItemDailyPV.put(daytime, pv);
+					}
+				}
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
+
+		StringBuilder sb = new StringBuilder();
+		sb.append(user).append(",");
+		sb.append(item);
+		long day = info30.time_ymd;
+		for (int i = 0; i < 30; i++)
+		{
+			long inc = 0, daytime = day + i * 24 * 60 * 60;
+			if (userItemDailyPV.containsKey(daytime))
+			{
+				inc = userItemDailyPV.get(daytime);
+			}
+			sb.append(",").append(inc);
+		}
+
+		// res.set("user_id", new Text(user_item[0]));
+		// res.set("item_id", new Text(user_item[1]));
+		// res.set("user_id", key);
+		// res.set("pv", sum);
+		res.set("result", new Text(sb.toString()));
+		context.write(res, NullWritable.get());
+	}
+
+	private void tianchiNO1(Tuple key, Iterable<Record> values, Context context) throws IOException, InterruptedException
 	{
 		String[] user_item = key.get(0).toString().split("\001");
 		String user = user_item[0];
@@ -178,7 +243,7 @@ public class MrReducer extends TableReducer<Tuple, Record>
 			sb.append(",").append(inc);
 		}
 		sb.append(",").append(diff);
-		sb.append(",").append(target);
+//		sb.append(",").append(target);
 
 		// res.set("user_id", new Text(user_item[0]));
 		// res.set("item_id", new Text(user_item[1]));
@@ -186,5 +251,12 @@ public class MrReducer extends TableReducer<Tuple, Record>
 		// res.set("pv", sum);
 		res.set("result", new Text(sb.toString()));
 		context.write(res, NullWritable.get());
+	}
+
+	@Override
+	public void reduce(Tuple key, Iterable<Record> values, Context context) throws IOException, InterruptedException
+	{
+		userItemDailyPV(key, values, context);
+//		tianchiNO1(key, values, context);
 	}
 }

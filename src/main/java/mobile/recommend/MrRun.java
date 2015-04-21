@@ -51,7 +51,7 @@ import org.apache.hadoop.util.ToolRunner;
 @SuppressWarnings("rawtypes")
 public class MrRun implements Tool {
 	// XXX 本地测试时展开 ${date_ymd} 宏的日期值，格式为 yyyyMMdd
-	public static final String TEST_DATE_YMD = "20141218";
+	public static final String TEST_DATE_YMD = "20141219";
 	public static final String MBP_MR = "recommend/mbp_mr.yaml";
 
 	private static final Log LOG = LogFactory.getLog(MrRun.class);
