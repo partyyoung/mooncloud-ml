@@ -96,7 +96,7 @@ public class MrReducer extends TableReducer<Tuple, Record> {
 						- SomeStaticUtils.DATEFORMAT2.parse(firstVisitTime)
 								.getTime() / 1000;
 			} catch (ParseException e) {
-				e.printStackTrace();
+//				e.printStackTrace();
 			}
 		}
 		diff = diff < 0 ? 0 : diff;
@@ -105,7 +105,7 @@ public class MrReducer extends TableReducer<Tuple, Record> {
 			lasttime = (SomeStaticUtils.DATEFORMAT3.parse(date_ymd).getTime() - SomeStaticUtils.DATEFORMAT2
 					.parse(lastVisitTime).getTime()) / 1000;
 		} catch (ParseException e) {
-			e.printStackTrace();
+//			e.printStackTrace();
 		}
 
 		StringBuilder sb = new StringBuilder();
