@@ -406,7 +406,7 @@ public class MrRun implements Tool {
 		// 设置 MR 本地运行环境
 		jobConf.set("mapred.job.tracker", "local");
 		jobConf.set("fs.default.name",
-				"file:///home/yangjd/git/mooncloud/warehouse/");
+				"file:///home/yangjd/Documents/workspace/mooncloud/warehouse/");
 		// System.setProperty("hadoop.home.dir",
 		// "file:///D:/My Documents/Downloads/hadoop-2.3.0");
 		jobConf.setBoolean(

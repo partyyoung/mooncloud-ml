@@ -4,7 +4,7 @@ app_key: 12345
 prog_name: tianchi
 # 输入数据表名及分区列表，指定分区时可以使用特殊宏 ${date_ymd} 表示调度运行时日期，
 # 允许使用语法 ${date_ymd-n} 或 ${date_ymd+n} 表示调度运行时刻之前 n 天或之后 n 天的日期
-table_parent: "file:///home/yangjd/git/mooncloud-ml/warehouse/"
+table_parent: "file:///home/yangjd/Documents/workspace/mooncloud-ml/warehouse/"
 table_in:
   mr_dw.tianchi_mobile_recommend_train_user:
   - dt=${date_ymd}
@@ -19,9 +19,9 @@ mr_classes:
   mapper_output_value: net.mooncloud.Record
   reducer: mobile.recommend.MrReducer
   #combiner: mobile.recommend.MrCombiner
-  #partitioner: 含包名的完整类名
+  partitioner: mobile.recommend.MrPartitioner
   #key_comparator: 含包名的完整类名
-  #value_grouping_comparator: 含包名的完整类名
+  value_grouping_comparator: mobile.recommend.MrGroupComparator
 # 建议使用的 Mapper 实例数量(1~480)，只是作为给系统的提示，并不一定按设置值分配实例
 # 未设置本选项时默认由系统自动决定最优值
 #map_tasks: 100
