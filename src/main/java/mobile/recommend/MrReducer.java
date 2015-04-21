@@ -214,7 +214,6 @@ public class MrReducer extends TableReducer<Tuple, Record>
 			}
 		}
 		diff = diff < 0 ? 0 : diff;
-
 		try
 		{
 			lasttime = (SomeStaticUtils.DATEFORMAT4.parse(date_ymd).getTime() - SomeStaticUtils.DATEFORMAT2.parse(lastVisitTime).getTime()) / 1000;
