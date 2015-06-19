@@ -1,1 +1,0 @@
-mr_dw.tianchi_mobile_recommend_train_user_daily,user_id:string,item_id:string,behavior_type:bigint,user_geohash:string,item_category:string,time:string,dt:string:

@@ -1,4 +1,4 @@
-package net.mooncloud.ml.naivebayes.classify;
+package net.mooncloud.ml.weixin;
 
 import net.mooncloud.io.Tuple;
 
@@ -19,8 +19,8 @@ public class MrGroupComparator extends WritableComparator {
 	public int compare(WritableComparable o1, WritableComparable o2) {
 		Tuple t1 = (Tuple) o1;
 		Tuple t2 = (Tuple) o2;
-		WritableComparable key1 = ((WritableComparable) t1.get(0));
-		WritableComparable key2 = ((WritableComparable) t2.get(0));
+		Text key1 = ((Text) t1.get(0));
+		Text key2 = ((Text) t2.get(0));
 		return key1.compareTo(key2);
 	}
 }
